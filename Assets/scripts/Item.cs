@@ -19,6 +19,7 @@ public class Item : MonoBehaviour
     {
         _current_image = GetComponent<Image>();
         _current_image.sprite = _spriteNeutral;
+        Use();
     }
 
     public void setSprite(Sprite sprite)
@@ -38,20 +39,30 @@ public class Item : MonoBehaviour
         switch (_itemType)
         {
             case ItemType.HEALTH:
-                Debug.Log("#MANA");
+                Debug.Log("#HEALTH");
+                setTransparent(false);
                 break;
 
             case ItemType.SWORD:
                 Debug.Log("#SWORD");
+                setTransparent(false);
                 break;
 
             case ItemType.NONE:
                 Debug.Log("#NONE");
                 setSprite(null);
+                setTransparent(true);
                 break;
 
             default:
                 break;
         }
+    }
+
+    public void setTransparent(bool isTransparent)
+    {
+        var tempColor = _current_image.color;
+        var output = (isTransparent == true) ? tempColor.a = 0f : tempColor.a = 1f;
+        _current_image.color = tempColor;
     }
 }
