@@ -26,6 +26,8 @@ public class AIEnemy : MonoBehaviour
     public CircleCollider2D _attackCollider;
     public CircleCollider2D _detectionCollider;
 
+    public List<GameObject> _skillList;
+
     private bool _follow = false;
     private bool _isReadyToAttack = false;
     private bool _animationLock = false;
@@ -41,6 +43,7 @@ public class AIEnemy : MonoBehaviour
     private bool stopped = false; // whether the enemy is currently stopped
     private float stopStartTime; // the time when the enemy started stopping
     private float nextSpellCreateTime;
+
 
     void Start()
     {
@@ -140,24 +143,35 @@ public class AIEnemy : MonoBehaviour
     }
     private void CreateSpell()
     {
-        GameObject iceSpell = Instantiate(iceSpellPrefab, transform.position, Quaternion.identity);
-        iceSpell.GetComponent<IceSpell>().direction = _objectToFollow.transform.position - transform.position;
-        iceSpell.GetComponent<IceSpell>().invocator = gameObject;
+        if (_skillList.Count > 0)
+        {
+            if (Time.time > nextSpellCreateTime && _character._life > 0)
+            {
+                float distance = Vector3.Distance(transform.position, _objectToFollow.transform.position);
+                if (distance <= range)
+                {
+                    Debug.Log("spell 0");
+                    // sélection d'un élément aléatoire dans la liste de compétences
+                    GameObject randomSkill = _skillList[Random.Range(0, _skillList.Count)];
+                    randomSkill.GetComponent<Skill>()._invocatorType = InvocatorType.ENEMY;
+                    randomSkill.GetComponent<Skill>()._invocator = gameObject;
+                    randomSkill.GetComponent<Skill>().Use();
+                    // GameObject iceSpell = Instantiate(iceSpellPrefab, transform.position, Quaternion.identity);
+                    // iceSpell.GetComponent<IceSpell>().direction = _objectToFollow.transform.position - transform.position;
+                    // iceSpell.GetComponent<IceSpell>().invocator = gameObject;
+                    nextSpellCreateTime = Time.time + spellCreateInterval;
+                }
+            }
+        }
     }
 
 
     // Update is called once per frame
     void Update()
     {
-        if (Time.time > nextSpellCreateTime)
-        {
-            float distance = Vector3.Distance(transform.position, _objectToFollow.transform.position);
-            if (distance <= range)
-            {
-                CreateSpell();
-                nextSpellCreateTime = Time.time + spellCreateInterval;
-            }
-        }
+
+        CreateSpell();
+
         if (_character._life <= 0)
         {
             _animator.Play(AnimationEnum.Dying);

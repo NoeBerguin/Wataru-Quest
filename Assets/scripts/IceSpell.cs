@@ -47,20 +47,23 @@ public class IceSpell : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log(other.gameObject.name);
-        BoxCollider2D boxCollider2D = other.gameObject.GetComponent<BoxCollider2D>();
-        if (_detectionCollider.IsTouching(boxCollider2D))
+        if (!isTuch && !isExplode)
         {
-            if (boxCollider2D != invocator.GetComponent<BoxCollider2D>())
+            Debug.Log(other.gameObject.name);
+            BoxCollider2D boxCollider2D = other.gameObject.GetComponent<BoxCollider2D>();
+            if (_detectionCollider.IsTouching(boxCollider2D))
             {
-                Debug.Log("tutch 2 ");
-                Character character = other.gameObject.GetComponent<Character>();
-                if (character != null)
+                if (boxCollider2D != invocator.GetComponent<BoxCollider2D>())
                 {
-                    isTuch = true;
-                    isExplode = true;
-                    animator.Play("explode");
-                    character.reciveDamage(1);
+                    Debug.Log("tutch 2 ");
+                    Character character = other.gameObject.GetComponent<Character>();
+                    if (character != null)
+                    {
+                        isTuch = true;
+                        isExplode = true;
+                        animator.Play("explode");
+                        character.reciveDamage(1);
+                    }
                 }
             }
         }

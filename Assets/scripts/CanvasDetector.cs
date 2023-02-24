@@ -52,6 +52,7 @@ public class CanvasDetector : MonoBehaviour
                 mousePosition = Input.mousePosition;
                 //mousePosition = Camera.main.ScreenToViewportPoint(mousePosition);
                 _slot_ref._item.transform.position = Vector2.Lerp(transform.position, mousePosition, 1f);
+                _slot_ref.transform.SetParent(_copySlotParent);
 
             }
         }
@@ -65,6 +66,7 @@ public class CanvasDetector : MonoBehaviour
 
     public void setItemSelected(Slot slot)
     {
+        _player.GetComponent<controller>().isMovingItem = true;
         _slot_ref = slot;
         _copySlotParent = _slot_ref.transform.parent;
         _slot_ref.transform.SetParent(this.transform);
@@ -74,6 +76,7 @@ public class CanvasDetector : MonoBehaviour
 
     public void unselectItem()
     {
+        _player.GetComponent<controller>().isMovingItem = false;
         foreach (RaycastResult element in RaycastMouse())
         {
             try
@@ -133,4 +136,5 @@ public class CanvasDetector : MonoBehaviour
             }
         }
     }
+
 }

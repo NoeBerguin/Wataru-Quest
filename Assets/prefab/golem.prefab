@@ -128,11 +128,16 @@ MonoBehaviour:
   moveDuration: 4
   stopDurationMin: 2
   stopDurationMax: 3
-  speed: 0.5
+  speed: 0.05
   _invertion: 0
-  _initial_speed: 0.2
+  _initial_speed: 0.02
+  iceSpellPrefab: {fileID: 5954795734316898602, guid: b40879b3488083b43b909d5d272f3c65, type: 3}
+  range: 3
+  spellCreateInterval: 3
   _attackCollider: {fileID: 2667471767979533237}
   _detectionCollider: {fileID: 2667471767979533238}
+  _skillList:
+  - {fileID: 4921834001361131375, guid: cceab68bdbeb29449b8b6891b312671c, type: 3}
 --- !u!114 &2667471767979533236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,6 +152,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _life: 3
   _canvas: {fileID: 0}
+  _lootCanvas: {fileID: 0}
+  type: 0
+  _inventoryUI_prefab: {fileID: 4942061495182784198, guid: 81df5d34000133341b73ecb7b34ed88c, type: 3}
 --- !u!58 &2667471767979533237
 CircleCollider2D:
   m_ObjectHideFlags: 0

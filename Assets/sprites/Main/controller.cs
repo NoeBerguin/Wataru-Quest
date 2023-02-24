@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 
 public class controller : MonoBehaviour
 {
@@ -17,11 +17,20 @@ public class controller : MonoBehaviour
     private GameObject _currentEnnemy;
     private bool _currentEnnemyIsInAttackRange = false;
 
+    private Vector3 targetPosition;  // La position de la souris où l'objet doit se déplacer
+
+    private bool isMoving;  // Indique si l'objet doit se déplacer ou non
+
+
     // public
     public float _speed = 1;
     public float _gravityEffect;
     public GameObject _user_inventory;
     public CircleCollider2D _attackCollider;
+
+    public GameObject _competenceInventory;
+
+    public bool isMovingItem = false;
 
 
     // Start is called before the first frame update
@@ -81,6 +90,34 @@ public class controller : MonoBehaviour
     void Update()
     {
         MoveDirectionControl();
+        if (Input.GetMouseButtonDown(0) && !_competenceInventory.GetComponent<CompetenceInventory>().isFocus() && !isMovingItem)  // Si l'utilisateur clique avec la souris
+        {
+            targetPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);  // Récupère la position de la souris
+            targetPosition.z = transform.position.z;  // La position Z est la même que celle de l'objet pour éviter les problèmes de profondeur
+            isMoving = true;  // Définit le booléen à true pour démarrer le déplacement
+        }
+
+        if (isMoving)
+        {
+            if (transform.position != targetPosition)  // Si l'objet n'est pas encore à la position de la souris
+            {
+                if (transform.position.x > targetPosition.x)
+                {
+                    transform.eulerAngles = new Vector3(0, 180f, 0);
+                }
+                else
+                {
+                    transform.eulerAngles = new Vector3(0, 0, 0);
+                }
+                transform.position = Vector3.MoveTowards(transform.position, targetPosition, _speed * Time.deltaTime);  // Déplace l'objet vers la position de la souris avec une vitesse définie
+                _animator.Play("walk");
+                if (transform.position == targetPosition)  // Vérifie si l'objet a atteint sa destination
+                {
+                    _animator.Play("idle");
+                    isMoving = false;  // Définit le booléen à false pour arrêter le déplacement
+                }                                                                                                       // Si la direction est vers la droite, faire une rotation de 180 degrés
+            }
+        }
         checkGiveDammageToEnemy();
     }
 
@@ -105,6 +142,13 @@ public class controller : MonoBehaviour
                 }
             }
         }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        targetPosition = transform.position;
+        isMoving = false;
+        _animator.Play("idle");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

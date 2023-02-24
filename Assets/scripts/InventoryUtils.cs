@@ -9,6 +9,8 @@ public class InventoryUtils : MonoBehaviour
     private RectTransform _rectTransform;
     public GameObject _slotPrefab;
 
+    public Vector3 initialPading;
+
     public List<Item> _listOfInitialItems;
 
 
@@ -31,7 +33,7 @@ public class InventoryUtils : MonoBehaviour
                     k++;
                 }
                 newSlot.transform.SetParent(this.transform);
-                slotRect.localPosition = new Vector3(0, 0, 0) + new Vector3(slotRect.sizeDelta.x / 2 + j * (slotRect.sizeDelta.x + _spaceBetweenSlots) + _spaceBetweenSlots, -slotRect.sizeDelta.y / 2 - i * (slotRect.sizeDelta.y + _spaceBetweenSlots) - _spaceBetweenSlots, 0);
+                slotRect.localPosition = new Vector3(0, 0, 0) + initialPading + new Vector3(slotRect.sizeDelta.x / 2 + j * (slotRect.sizeDelta.x + _spaceBetweenSlots) + _spaceBetweenSlots, -slotRect.sizeDelta.y / 2 - i * (slotRect.sizeDelta.y + _spaceBetweenSlots) - _spaceBetweenSlots, 0);
                 _listSlots.Add(newSlot);
             }
         }
